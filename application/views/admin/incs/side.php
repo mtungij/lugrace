@@ -133,7 +133,16 @@
                 <div class="tab-pane" id="sub_menu">
                     <nav class="sidebar-nav">
                         <ul class="main-menu metismenu">
-                        	<li><a href="<?php echo base_url("admin/cash_transaction"); ?>"><i class="icon-wallet"></i>Cash Transaction</a></li>
+                    
+                            <li>
+                                <a href="#uiElements" class="has-arrow"><i class="icon-wallet"></i> <span>Transaction Report</span></a>
+                                <ul>
+                                    <li><a href="<?php echo base_url("admin/cash_transaction") ?>">General Transactions</a></li>
+                                    <li><a href="<?php echo base_url("admin/teller_trasior") ?>">Teller Officer Cash Transaction</a></li>
+                                    <li><a href="<?php echo base_url("admin/branch_trans") ?>">Branchwise Transactions</a></li>
+                                </ul>
+                            </li>
+
                             <li>
                                 <a href="#uiElements" class="has-arrow"><i class="icon-wallet"></i> <span>Report za Mwezi</span></a>
                                 <ul>

@@ -1031,6 +1031,46 @@ public function get_totalLoanout($customer_id){
 		 return $data->result();
 	}
 
+	public function get_empl_transaction($comp_id){
+		$date = date("Y-m-d");
+		$query = $this->db->query("
+			SELECT 
+				e.empl_name AS employee,
+				b.blanch_name AS branch, 
+				SUM(pr.loan_aprov) AS total_loan_approved, 
+				SUM(pr.depost) AS total_deposit
+			FROM tbl_prev_lecod pr
+			LEFT JOIN tbl_blanch b ON b.blanch_id = pr.blanch_id
+			LEFT JOIN tbl_employee e ON e.empl_id = pr.empl_id
+			WHERE pr.comp_id = '$comp_id' 
+			AND DATE(pr.time_rec) = '$date'
+			GROUP BY e.empl_name, b.blanch_name
+			ORDER BY b.blanch_name ASC, e.empl_name ASC
+		");
+	
+		return $query->result();
+	}
+
+	public function get_branch_transaction($comp_id){
+		$date = date("Y-m-d");
+		$query = $this->db->query("
+			SELECT 
+				b.blanch_name AS branch, 
+				SUM(pr.loan_aprov) AS total_loan_approved, 
+				SUM(pr.depost) AS total_deposit
+			FROM tbl_prev_lecod pr
+			LEFT JOIN tbl_blanch b ON b.blanch_id = pr.blanch_id
+			WHERE pr.comp_id = '$comp_id' 
+			AND DATE(pr.time_rec) = '$date'
+			GROUP BY b.blanch_name
+			ORDER BY b.blanch_name ASC
+		");
+	
+		return $query->result();
+	}
+	
+	
+
 	public function get_paid_penart_data($loan_id){
 	$date = date("Y-m-d");
 	$penart = $this->db->query("SELECT SUM(pp.penart_paid) AS total_penartPaid FROM tbl_pay_penart pp WHERE pp.loan_id = '$loan_id' AND pp.penart_date = '$date' GROUP BY pp.loan_id");
@@ -5867,6 +5907,28 @@ return $query->result_array();
 		$data = $this->db->query("SELECT SUM(loan_aprov) AS total_aprove,SUM(depost) AS total_deposit FROM tbl_prev_lecod pr LEFT JOIN tbl_customer c ON c.customer_id = pr.customer_id LEFT JOIN tbl_blanch b ON b.blanch_id = pr.blanch_id LEFT JOIN tbl_employee e ON e.empl_id = pr.empl_id WHERE pr.blanch_id = '$blanch_id' AND date(pr.time_rec) = '$date' ORDER BY prev_id DESC");
 		 return $data->row();
 	}
+
+	public function get_cash_transaction_um_blanch($blanch_id, $comp_id) {
+		$date = date("Y-m-d");
+  
+		// Query to fetch grouped data by employee and customer, including comp_id condition
+		$this->db->select('e.empl_name, e.empl_id, c.customer_name, c.customer_id, 
+						   SUM(pr.loan_aprov) AS total_aprove, 
+						   SUM(pr.depost) AS total_deposit');
+		$this->db->from('tbl_prev_lecod pr');
+		$this->db->join('tbl_customer c', 'c.customer_id = pr.customer_id');
+		$this->db->join('tbl_blanch b', 'b.blanch_id = pr.blanch_id');
+		$this->db->join('tbl_employee e', 'e.empl_id = pr.empl_id');
+		$this->db->where('pr.blanch_id', $blanch_id);
+		$this->db->where('pr.comp_id', $comp_id);  // Adding the condition for comp_id
+		$this->db->where('DATE(pr.time_rec)', $date);
+		$this->db->group_by('e.empl_id, c.customer_id');
+		$this->db->order_by('e.empl_id, c.customer_id DESC');
+  
+		$query = $this->db->get();
+		return $query->result();
+	}
+	
 
 
 	public function get_blanchTransaction_blanch($from,$to,$blanch_id){

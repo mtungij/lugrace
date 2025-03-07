@@ -3073,6 +3073,10 @@ public function disburse($loan_id){
 
 
 
+
+
+
+
 	public function teller_dashboard(){
 		$this->load->model('queries');
 		$comp_id = $this->session->userdata('comp_id');
@@ -3080,11 +3084,14 @@ public function disburse($loan_id){
 		$depost = $this->queries->get_sumTodayDepost($comp_id);
 		$withdraw = $this->queries->get_sumTodayWithdrawal($comp_id);
 		$customer = $this->queries->get_allcustomerData($comp_id);
+    
 		  // echo "<pre>";
 		  // print_r($customer);
 		  //   exit();
 		$this->load->view('admin/teller_dashboard',['float'=>$float,'depost'=>$depost,'withdraw'=>$withdraw,'customer'=>$customer]);
 	}
+
+
 
 
 	public function search_customerData(){
@@ -5023,9 +5030,9 @@ public function previous_transfor(){
 
     $hai_wateja = $this->queries->get_depositing_hai($comp_id);
     $sugu_wateja = $this->queries->get_depositing_sugu($comp_id);
- 	   //  echo "<pre>";
- 	   // print_r($sugu_wateja);
- 	   //       exit();
+ 	  //   echo "<pre>";
+ 	  //  print_r($cash);
+ 	  //        exit();
  	$this->load->view('admin/cash_transaction',['cash'=>$cash,'sum_depost'=>$sum_depost,'sum_withdrawls'=>$sum_withdrawls,'blanch'=>$blanch,'sum_deducted'=>$sum_deducted,'sum_paid_penart'=>$sum_paid_penart,'account_deposit'=>$account_deposit,'default_list'=>$default_list,'toyal_default'=>$toyal_default,'withdrawal_account'=>$withdrawal_account,'total_code_no'=>$total_code_no,'deducted_fee'=>$deducted_fee,'penart_paid'=>$penart_paid,'miamala'=>$miamala,'total_miamala'=>$total_miamala,'hai_wateja'=>$hai_wateja,'sugu_wateja'=>$sugu_wateja]);
  }
 
@@ -9135,16 +9142,16 @@ public function create_saving_deposit(){
 
 
 
-
-	public function teller_oficer(){
+  public function teller_oficer(){
 		$this->load->model('queries');
 		$comp_id = $this->session->userdata('comp_id');
 		$empl_oficer = $this->queries->get_empl_data_loan($comp_id);
 		$total_deposit = $this->queries->get_total_deposit($comp_id);
 		$total_withdrawal = $this->queries->get_total_withdrawal($comp_id);
 		$cash_account = $this->queries->get_totalaccount_transaction($comp_id);
+   
 		// echo "<pre>";
-		//  print_r($cash_account);
+		//  print_r($empl_oficer);
 		//           exit();
 		$this->load->view('admin/teller_oficer',['empl_oficer'=>$empl_oficer,'total_deposit'=>$total_deposit,'total_withdrawal'=>$total_withdrawal,'cash_account'=>$cash_account]);
 	}
@@ -9152,12 +9159,20 @@ public function create_saving_deposit(){
 	public function teller_trasior(){
 		$this->load->model('queries');
 		$comp_id = $this->session->userdata('comp_id');
-		$transaction = $this->queries->get_teller_deposit_with($comp_id);
+		$transactions = $this->queries-> get_empl_transaction($comp_id);
 		// echo "<pre>";
 		// print_r($transaction);
 		//        exit();
-		$this->load->view('admin/teller_trasior',['transaction'=>$transaction]);
+		$this->load->view('admin/teller_trasior',['transactions'=>$transactions]);
 	}
+
+  public function branch_trans()
+  {
+    $this->load->model('queries');
+		$comp_id = $this->session->userdata('comp_id');
+    $data['transactions'] = $this->queries->get_branch_transaction($comp_id);
+    $this->load->view('admin/branch_transaction', $data);
+  }
 
 	public function daily_report(){
 		$this->load->model('queries');

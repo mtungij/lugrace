@@ -2436,7 +2436,8 @@ $this->db->query("INSERT INTO tbl_outstand (`comp_id`,`loan_id`,`blanch_id`,`loa
     $customery = $this->queries->get_allcutomerblanchData($blanch_id);
     $customer_id = $this->input->post('customer_id');
     $comp_id = $this->input->post('comp_id');
-    
+    //  print_r($empl_data);
+    //           exit();
     @$blanch_id = $customer->blanch_id;
     $acount = $this->queries->get_customer_account_verfied($blanch_id);
     $this->load->view('oficer/depost_withdrow',['customer'=>$customer,'customery'=>$customery,'acount'=>$acount,'empl_data'=>$empl_data]);

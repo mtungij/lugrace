@@ -10,7 +10,7 @@
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="<?php echo base_url("admin/index"); ?>"><i class="icon-home"></i></a></li>                            
                             <li class="breadcrumb-item active">Report</li>
-                            <li class="breadcrumb-item active">Mauzo ya Leo</li>
+                            <li class="breadcrumb-item active">General Transaction</li>
                         </ul>
                     </div>            
                  
@@ -28,7 +28,7 @@
                 <div class="col-lg-12">
                     <div class="card">
                          <div class="header">
-                            <h2>Mauzo ya Leo </h2> 
+                            <h2>General Transaction</h2> 
                             <div class="pull-right">
                                <a href="" data-toggle="modal" data-target="#addcontact2" class="btn btn-primary"><i class="icon-calendar">Filter</i></a>  
                             </div>   
@@ -38,19 +38,17 @@
                                 <table class="table table-hover js-basic-example dataTable table-custom">
                                     <thead class="thead-primary">
                                          <th>S/No.</th>
-                                         <th>Tawi</th>
-                                         <th>Afisa</th>
-                                        <th>Jina la Mteja</th>
-                                        <th>Nambari Ya Simu</th>
-                                        <th>Lipisha</th>
-                                        <th>Akaunti Iliyo Lipisha</th>
-                                        <th>Gawa</th>
-                                        <th>Akaunti Iliyo Gawa</th>
-                                        <!-- <th>Fomu</th>
-                                        <th>Faini</th> -->
-                                        <th>Tarehe</th>
-                                        <th>Tarehe & Muda</th>
-                                        <th>Maamuzi</th>
+                                         <th>Branch</th>
+                                         <th>Staff</th>
+                                        <th>Customer Name</th>
+                                        <th>Phone Number</th>
+                                        <th>Deposit</th>
+                                        <th>Deposited A/C</th>
+                                        <th>Disbursed loan</th>
+                                        <th>Disbursed A/C</th>
+                                        <th>Date</th>
+                                        
+                                        <th>Adjust</th>
                                     </thead>
                                    
                                     <tbody>
@@ -98,12 +96,13 @@
                                         </td>
                                     <!--     <td><?php //echo number_format($cashs->total_deducted); ?></td>
                                         <td><?php //echo number_format($cashs->total_penartPaid); ?></td> -->
-                                    <td><?php echo $cashs->lecod_day; ?></td>
+                                   
                                     <td><?php echo $cashs->time_rec; ?></td>
                                     <td>
                                         <?php if ($cashs->depost == TRUE) {
                                          ?>
-                                        <a href="<?php echo base_url("admin/delete_depost_data/{$cashs->pay_id}"); ?>" class="btn btn-primary btn-sm"  onclick="return confirm('Are you sure?')" title="Adjust"><i class="icon-pencil"></i></a>
+                                         
+                                        <a href="<?php echo base_url("admin/delete_depost_data/{$cashs->pay_id}"); ?>" class="btn btn-danger"  onclick="return confirm('Are you sure you want to delete this payment?')" title="Adjust">Delete</i></a>
                                     <?php }else{ ?>
                                         <?php } ?>
                                     </td>
@@ -113,7 +112,7 @@
                                     <?php endforeach; ?>
                                     </tbody>
                                      <tr>
-                                        <td><b>JUMLA:</b></td>
+                                        <td><b>TOTAL:</b></td>
                                         <td></td>
                                         <td></td>
                                         <td></td>
@@ -132,7 +131,7 @@
                                        <td></td> 
                                        <td></td> 
                                        <td></td> 
-                                       <td>MUHTASALI WA KULIPISHA</td> 
+                                       <td><b>SUMMARY</b></td> 
                                        <td></td> 
                                        <td></td> 
                                        <td></td> 
@@ -162,7 +161,7 @@
                                          <td></td>
                                          <td></td>
                                          <td></td>
-                                         <td><b>MADENI SUGU</b></td>
+                                         <td><b>Default repayment</b></td>
                                          <td></td>
                                          <td></td>
                                          <td></td>
@@ -193,7 +192,7 @@
                                          <td> </td>
                                          <td></td>
                                          <td></td>
-                                         <td><b>JUMLA MADENI SUGU</b></td>
+                                         <td><b>Total Default repayment</b></td>
                                          <td></td>
                                          <td><b><?php echo number_format($toyal_default->total_default); ?></b></td>
                                          <td></td>
@@ -202,57 +201,14 @@
                                          <td></td>
                                          <td></td>
                                      </tr>
-                                       <tr>
-                                         <td></td>
-                                         <td> </td>
-                                         <td></td>
-                                         <td></td>
-                                         <td><b>MIAMALA HEWA</b></td>
-                                         <td></td>
-                                         <td><b><?php //echo number_format($toyal_default->total_default); ?></b></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                     </tr>
-                                    <?php foreach ($miamala as $miamalas): ?>
-                                         <tr>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td><?php echo $miamalas->agent; ?></td>
-                                         <td><?php echo $miamalas->account_name; ?></td>
-                                         <td><?php echo number_format($miamalas->amount); ?></td>
-                                         <td><?php echo $miamalas->blanch_name; ?></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                     </tr>
-                                     <?php endforeach; ?>
-
-                                        <tr>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td><b>JUMLA YA MIAMALA HEWA</b><?php //echo $miamalas->agent; ?></td>
-                                         <td><?php //echo $miamalas->account_name; ?></td>
-                                         <td><b><?php echo number_format($total_miamala->total_miamala); ?></b></td>
-                                         <td><?php //echo $miamalas->blanch_name; ?></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                     </tr>
+                                       
+                                
                                      <tr>
                                          <td></td>
                                          <td></td>
                                          <td></td>
                                          <td></td>
-                                         <td>MUHTASALI WA GAWA</td>
+                                         <td>Disbursed Account Summary</td>
                                          <td></td>
                                          <td></td>
                                          <td></td>
@@ -278,56 +234,15 @@
                                      </tr>
                                      <?php endforeach; ?>
 
-                                      <tr>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td><b>JUMLA YA CODE NO</b></td>
-                                         <td></td>
-                                         <td><b><?php echo number_format($total_code_no->total_interest); ?></b></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                     </tr>
-                                     <tr>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td><b>JUMLA YA FOMU</b></td>
-                                         <td></td>
-                                         <td><b><?php echo number_format($deducted_fee->total_deducted); ?></b></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                     </tr>
+                                    
 
-                                     <tr>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td><b>JUMLA YA FAINI</b></td>
-                                         <td></td>
-                                         <td><b><?php echo number_format($penart_paid->total_penart); ?></b></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                     </tr>
 
                                        <tr>
                                          <td></td>
                                          <td></td>
                                          <td></td>
                                          <td></td>
-                                         <td><b>JUMLA YA WATEJA WALIO LIPA HAI</b></td>
+                                         <td><b>Total active clients who paid</b></td>
                                          <td></td>
                                          <td><b><?php echo number_format($hai_wateja->total_hai); ?></b></td>
                                          <td></td>
@@ -341,7 +256,7 @@
                                          <td></td>
                                          <td></td>
                                          <td></td>
-                                         <td><b>JUMLA YA WATEJA WALIO LIPA SUGU</b></td>
+                                         <td><b>Total overdue clients who paid</b></td>
                                          <td></td>
                                          <td><b><?php echo number_format($sugu_wateja->total_sugu); ?></b></td>
                                          <td></td>
@@ -357,7 +272,7 @@
                                          <td></td>
                                          <td></td>
                                          <td></td>
-                                         <td><b>JUMLA YA MAUZO</b></td>
+                                         <td><b>Total Amount payments</b></td>
                                          <td></td>
                                          <td><b><?php echo number_format($sum_withdrawls->total_deposit + $total_miamala->total_miamala); ?></b></td>
                                          <td></td>
