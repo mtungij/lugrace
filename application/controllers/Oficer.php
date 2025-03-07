@@ -733,7 +733,9 @@ return true;
              $empl_id = $data['empl_id'];
              $phone = $data['phone_no'];
              $date_reg = $data['reg_date'];
-             $phone = '255'.$phone;
+             if (substr($phone, 0, 1) === '0') {
+              $phone = '255' . substr($phone, 1);
+          }
 
               // print_r($phone);
               //     exit();
