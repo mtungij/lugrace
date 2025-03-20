@@ -27,17 +27,49 @@ class Oficer extends CI_Controller {
    $defaulter =$this->queries->getOutstandingLoans($blanch_id);
    
     $sugu_wateja = $this->queries->get_depositing_sugu_blanch($blanch_id);
-   
-    // echo "<pre>";
-    //        print_r( $defaulter);
-    //              exit();
+
+    $active_customer = $this->queries->get_total_BranchrActive($blanch_id);
+    $total_branch_customer = $this->queries->get_total_customerBlanch($blanch_id);
+    $total_default_branch = $this->queries->get_total_defaultBlanch($blanch_id);
+    $total_done_branch = $this->queries->get_total_doneBlanch($blanch_id);
+
+    $received = $this->queries->get_today_received_loanBlanch($blanch_id);
+    $total_receved = $this->queries->get_sum_today_recevedBlanch($blanch_id);
+    $weekly_received = $this->queries->get_today_received_weeklyBlanch($blanch_id);
+    $daily_received = $this->queries->get_today_received_dailyBlanch($blanch_id);
+    $mothly_received = $this->queries->get_today_received_monthlyBlanch($blanch_id);
+    $weekly_with = $this->queries->get_loan_withdrawal_today_blanch_weekly($blanch_id);
+    $daily_with = $this->queries-> get_loan_withdrawal_today_blanch_daily($blanch_id);
+    $monthly_with = $this->queries->get_loan_withdrawal_today_blanch_monthly($blanch_id);
+
+  
+    
+          //  print_r(      $daily_with  ); 
+          //        exit();
 
 	$this->load->view('oficer/index',['manager_data'=>$manager_data , 'loan_pending' => $loan_pending, 'total_disbursed' => $total_disbursed,
 'total_withdrawal' => $total_withdrawal, 'total_disbrse' => $total_disbrse,'total_loanwithdraw' =>  $total_loanwithdraw, 'pending_total' => $pending_total,
 'leojumla' => $leojumla, 'total_active' => $total_active , 'deposit_out'=> $deposit_out,'total_deducted'=>$total_deducted,
-'total_receved' => $total_receved, 'total_pending' => $total_pending
+'total_receved' => $total_receved, 'total_pending' => $total_pending,'active_customer' =>$active_customer,'total_branch_customer'=>$total_branch_customer,'total_default_branch'=>$total_default_branch ,
+'total_done_branch'=> $total_done_branch , 'weekly_received'=>$weekly_received,'daily_received'=>$daily_received ,'mothly_received'=>  $mothly_received , 'weekly_with'=>$weekly_with , 'daily_with'=>$daily_with ,
+'monthly_with'=>$monthly_with 
 ]);
 	}
+
+  public function active_collection()
+  {
+    $this->load->model('queries');
+    $blanch_id = $this->session->userdata('blanch_id');
+    $empl_id = $this->session->userdata('empl_id');
+    $manager_data = $this->queries->get_manager_data($empl_id);
+    $comp_id = $manager_data->comp_id;
+    $company_data = $this->queries->get_companyData($comp_id);
+        $data_collection = $this->queries->get_active_collections($blanch_id,$comp_id);
+  // echo "<pre>";
+  //          print_r($data_collection);
+  //                exit();
+        $this->load->view('oficer/active_collection',['data_collection'=>$data_collection]);
+  }
 
   public function leo()
   {
@@ -3863,7 +3895,9 @@ public function get_loan_withdrawal_data(){
     $loan_with = $this->queries->get_loan_withdrawal_today_blanch_general($blanch_id);
 
     $total_loanwith = $this->queries->get_loan_withdrawal_today_blanch($blanch_id);
-    // print_r($total_loanwith);
+    // echo "<pre>";
+    // print_r( $loan_with);
+    // echo "<pre>";
     //       exit();
     $this->load->view('oficer/loan_withdrawal',['empl_data'=>$empl_data,'loan_with'=>$loan_with,'total_loanwith'=>$total_loanwith]);
 }

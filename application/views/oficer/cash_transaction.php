@@ -181,46 +181,11 @@
                                          <td></td>
                                          <td></td>
                                          <td></td>
-                                     </tr>
-                                        <tr>
-                                         <td></td>
-                                         <td> </td>
-                                         <td></td>
-                                         <td></td>
-                                         <td><b>MIAMALA HEWA</b></td>
-                                         <td></td>
-                                         <td><b><?php //echo number_format($toyal_default->total_default); ?></b></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                     </tr>
+                                    
 
-                                     <?php foreach ($miamala as $miamalas): ?>
-                                         <tr>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td><?php echo $miamalas->agent; ?></td>
-                                         <td><?php echo $miamalas->account_name; ?></td>
-                                         <td><?php echo number_format($miamalas->amount); ?></td>
-                                         <td><?php echo $miamalas->blanch_name; ?></td>
-                                         <td></td>
-                                         <td></td>
-                                     </tr>
-                                     <?php endforeach; ?>
-                                     <tr>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td><b>JUMLA YA MIAMALA HEWA</b><?php //echo $miamalas->agent; ?></td>
-                                         <td><?php //echo $miamalas->account_name; ?></td>
-                                         <td><b><?php echo number_format($total_miamala->total_miamala); ?></b></td>
-                                         <td><?php //echo $miamalas->blanch_name; ?></td>
-                                         <td></td>
-                                         <td></td>
-                                     </tr>
+                                    
+                                
+                                     
                                      <tr>
                                          <td></td>
                                          <td></td>
@@ -247,42 +212,9 @@
                                          <td></td>
                                      </tr>
                                      <?php endforeach; ?>
-                                      <tr>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td><b>JUMLA YA CODE NO</b></td>
-                                         <td></td>
-                                         <td><b><?php echo number_format($total_code_no->total_interest); ?></b></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                     </tr>
-                                     <tr>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td><b>JUMLA YA FOMU</b></td>
-                                         <td></td>
-                                         <td><b><?php echo number_format($deducted_fee->total_deducted); ?></b></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                     </tr>
-                                     <tr>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td><b>JUMLA YA FAINI</b></td>
-                                         <td></td>
-                                         <td><b><?php echo number_format($penart_paid->total_penart); ?></b></td>
-                                         <td></td>
-                                         <td></td>
-                                         <td></td>
-                                     </tr>
+                                     
+                                    
+                                    
                                            <tr>
                                          <td></td>
                                          <td></td>

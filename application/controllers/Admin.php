@@ -7893,9 +7893,9 @@ public function send_email(){
       $paid_penart = $this->queries->get_paid_penartFilter($blanch_id,$loan_status,$comp_id);
 
       $blanch_data = $this->queries->get_blanch_data($blanch_id);
-         //    echo "<pre>";
-         // print_r($data_collection);
-         //       exit();
+        //     echo "<pre>";
+        //  print_r( $data_collection);
+        //        exit();
       $this->load->view('admin/loan_collection_blanch',['data_collection'=>$data_collection,'blanch'=>$blanch,'data_blanch'=>$data_blanch,'total_loans'=>$total_loans,'loan_paid'=>$loan_paid,'penart_amounts'=>$penart_amounts,'paid_penart'=>$paid_penart,'blanch_id'=>$blanch_id,'loan_status'=>$loan_status,'comp_id'=>$comp_id,'blanch_data'=>$blanch_data]);
 
       }

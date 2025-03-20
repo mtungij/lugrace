@@ -2174,6 +2174,71 @@ public function update_password_data($comp_id, $userdata)
     	return $data->result();
     }
 
+	public function get_today_received_weeklyBlanch($blanch_id) {
+		$date = date("Y-m-d");
+		
+		$query = $this->db->query("
+			SELECT SUM(p.depost) AS total_received
+			FROM tbl_depost p
+			LEFT JOIN tbl_loans l ON l.loan_id = p.loan_id
+			LEFT JOIN tbl_customer c ON c.customer_id = l.customer_id
+			LEFT JOIN tbl_blanch b ON b.blanch_id = l.blanch_id
+			LEFT JOIN tbl_account_transaction at ON at.trans_id = p.depost_method
+			LEFT JOIN tbl_employee e ON e.empl_id = p.empl_id
+			WHERE p.blanch_id = '$blanch_id'
+			AND p.depost_day = '$date'
+			AND l.day = 7
+		");
+	
+		$result = $query->row();
+	
+		return isset($result->total_received) ? $result : (object) ['total_received' => 0];
+	}
+	
+	public function get_today_received_dailyBlanch($blanch_id) {
+		$date = date("Y-m-d");
+		
+		$query = $this->db->query("
+			SELECT SUM(p.depost) AS total_received
+			FROM tbl_depost p
+			LEFT JOIN tbl_loans l ON l.loan_id = p.loan_id
+			LEFT JOIN tbl_customer c ON c.customer_id = l.customer_id
+			LEFT JOIN tbl_blanch b ON b.blanch_id = l.blanch_id
+			LEFT JOIN tbl_account_transaction at ON at.trans_id = p.depost_method
+			LEFT JOIN tbl_employee e ON e.empl_id = p.empl_id
+			WHERE p.blanch_id = '$blanch_id'
+			AND p.depost_day = '$date'
+			AND l.day = 1
+		");
+	
+		$result = $query->row();
+	
+		return isset($result->total_received) ? $result : (object) ['total_received' => 0];
+	}
+
+	public function get_today_received_monthlyBlanch($blanch_id) {
+		$date = date("Y-m-d");
+		
+		$query = $this->db->query("
+			SELECT SUM(p.depost) AS total_received
+			FROM tbl_depost p
+			LEFT JOIN tbl_loans l ON l.loan_id = p.loan_id
+			LEFT JOIN tbl_customer c ON c.customer_id = l.customer_id
+			LEFT JOIN tbl_blanch b ON b.blanch_id = l.blanch_id
+			LEFT JOIN tbl_account_transaction at ON at.trans_id = p.depost_method
+			LEFT JOIN tbl_employee e ON e.empl_id = p.empl_id
+			WHERE p.blanch_id = '$blanch_id'
+			AND p.depost_day = '$date'
+			AND l.day IN (28, 30, 31)
+		");
+	
+		$result = $query->row();
+	
+		return isset($result->total_received) ? $result : (object) ['total_received' => 0];
+	}
+	
+
+
     public function get_sumReceived_amount($comp_id){
     	$date = date("Y-m-d");
     	$data = $this->db->query("SELECT SUM(depost) AS total_depost FROM tbl_depost WHERE comp_id = '$comp_id' AND depost_day = '$date'");
@@ -2991,10 +3056,45 @@ public function get_totalLoanDoneGroup($group_id){
  	 return $customer->row();
  }
 
+ public function get_total_defaultBlanch($blanch_id) {
+    $query = $this->db->query("
+        SELECT COUNT(DISTINCT c.customer_id) AS total_default
+        FROM tbl_customer c
+        INNER JOIN tbl_loans l ON c.customer_id = l.customer_id
+        WHERE c.blanch_id = '$blanch_id'
+        AND l.loan_status = 'out'
+    ");
+
+    $result = $query->row();
+
+    return isset($result->total_default) ? $result : (object) ['total_default' => 0];
+}
+
+
+
+public function get_total_doneBlanch($blanch_id) {
+    $query = $this->db->query("
+        SELECT COUNT(DISTINCT c.customer_id) AS total_done
+        FROM tbl_customer c
+        INNER JOIN tbl_loans l ON c.customer_id = l.customer_id
+        WHERE c.blanch_id = '$blanch_id'
+        AND l.loan_status = 'done'
+    ");
+
+    $result = $query->row();
+
+    return isset($result->total_default) ? $result : (object) ['total_done' => 0];
+}
+
   public function get_total_customerActive($comp_id){
  	$customer = $this->db->query("SELECT COUNT(customer_id) AS total_Active FROM tbl_customer WHERE comp_id = '$comp_id' AND customer_status = 'open'");
  	 return $customer->row();
  }
+
+ public function get_total_BranchrActive($blanch_id){
+	$customer = $this->db->query("SELECT COUNT(customer_id) AS total_Active FROM tbl_customer WHERE blanch_id = '$blanch_id' AND customer_status = 'open'");
+	 return $customer->row();
+}
 
   public function get_total_customerActiveBlanch($blanch_id){
  	$customer = $this->db->query("SELECT COUNT(customer_id) AS total_ActiveBla FROM tbl_customer WHERE blanch_id = '$blanch_id' AND customer_status = 'open'");
@@ -3548,6 +3648,44 @@ public function get_totalLoanDoneGroup($group_id){
 
  	return $loan_data->result();
  }
+
+ public function get_active_collections($blanch_id, $comp_id) {
+    $today = date('Y-m-d'); // Get today's date
+
+    $loan_data = $this->db->query("SELECT pn.penart_paid,
+                                        SUM(d.depost) AS total_depost,
+                                        c.f_name,
+                                        c.m_name,
+                                        c.l_name,
+                                        b.blanch_name,
+                                        l.loan_id,
+                                        l.loan_int,
+                                        l.restration,
+                                        l.loan_status,
+                                        ot.loan_end_date,
+                                        e.username,
+                                        l.day,
+                                        ot.loan_stat_date  
+                                 FROM tbl_loans l 
+                                 LEFT JOIN tbl_pay_penart pn ON pn.loan_id = l.loan_id  
+                                 LEFT JOIN tbl_depost d ON d.loan_id = l.loan_id 
+                                 JOIN tbl_customer c ON c.customer_id = l.customer_id 
+                                 JOIN tbl_blanch b ON b.blanch_id = l.blanch_id 
+                                 LEFT JOIN tbl_employee e ON e.empl_id = l.empl_id 
+                                 LEFT JOIN tbl_outstand ot ON ot.loan_id = l.loan_id  
+                                 WHERE l.blanch_id = '$blanch_id' 
+                                   AND l.loan_status = 'withdrawal' 
+                                   AND l.comp_id = '$comp_id'
+                                   AND l.return_date = '$today'  -- Filter by today's return_date
+                                 GROUP BY l.loan_id");
+
+    foreach($loan_data->result() as $r) {
+        $r->total_penart_amount = $this->get_total_penartData($r->loan_id);
+    }
+
+    return $loan_data->result();
+}
+
 
 
  public function get_total_loanFilter($blanch_id,$loan_status,$comp_id){
@@ -5813,6 +5951,73 @@ public function get_loan_withdrawal_today_blanch_general($blanch_id){
  	$data = $this->db->query("SELECT * FROM tbl_outstand ot JOIN tbl_loans l ON l.loan_id = ot.loan_id JOIN tbl_customer c ON c.customer_id = l.customer_id JOIN tbl_blanch b ON b.blanch_id = l.blanch_id JOIN tbl_loan_category lc ON lc.category_id = l.category_id JOIN tbl_account_transaction at ON at.trans_id = l.method WHERE ot.blanch_id = '$blanch_id' AND l.loan_status = 'withdrawal' AND ot.loan_stat_date = '$date'");
  	return $data->result();
  }
+
+ public function get_loan_withdrawal_today_blanch_weekly($blanch_id) {
+    $date = date("Y-m-d");
+    
+    $query = $this->db->query("
+        SELECT SUM(l.how_loan) AS total_withdrawal
+        FROM tbl_outstand ot
+        JOIN tbl_loans l ON l.loan_id = ot.loan_id
+        JOIN tbl_customer c ON c.customer_id = l.customer_id
+        JOIN tbl_blanch b ON b.blanch_id = l.blanch_id
+        JOIN tbl_loan_category lc ON lc.category_id = l.category_id
+        JOIN tbl_account_transaction at ON at.trans_id = l.method
+        WHERE ot.blanch_id = '$blanch_id' 
+        AND l.loan_status = 'withdrawal' 
+        AND ot.loan_stat_date = '$date'
+        AND l.day = 7
+    ");
+
+    $result = $query->row();
+
+    return isset($result->total_withdrawal) ? $result : (object) ['total_withdrawal' => 0];
+}
+
+public function get_loan_withdrawal_today_blanch_monthly($blanch_id) {
+    $date = date("Y-m-d");
+    
+    $query = $this->db->query("
+        SELECT SUM(l.how_loan) AS total_withdrawal
+        FROM tbl_outstand ot
+        JOIN tbl_loans l ON l.loan_id = ot.loan_id
+        JOIN tbl_customer c ON c.customer_id = l.customer_id
+        JOIN tbl_blanch b ON b.blanch_id = l.blanch_id
+        JOIN tbl_loan_category lc ON lc.category_id = l.category_id
+        JOIN tbl_account_transaction at ON at.trans_id = l.method
+        WHERE ot.blanch_id = '$blanch_id' 
+        AND l.loan_status = 'withdrawal' 
+        AND ot.loan_stat_date = '$date'
+        AND l.day IN (28, 30, 31)
+    ");
+
+    $result = $query->row();
+
+    return isset($result->total_withdrawal) ? $result : (object) ['total_withdrawal' => 0];
+}
+
+public function get_loan_withdrawal_today_blanch_daily($blanch_id) {
+    $date = date("Y-m-d");
+    
+    $query = $this->db->query("
+        SELECT SUM(l.how_loan) AS total_withdrawal
+        FROM tbl_outstand ot
+        JOIN tbl_loans l ON l.loan_id = ot.loan_id
+        JOIN tbl_customer c ON c.customer_id = l.customer_id
+        JOIN tbl_blanch b ON b.blanch_id = l.blanch_id
+        JOIN tbl_loan_category lc ON lc.category_id = l.category_id
+        JOIN tbl_account_transaction at ON at.trans_id = l.method
+        WHERE ot.blanch_id = '$blanch_id' 
+        AND l.loan_status = 'withdrawal' 
+        AND ot.loan_stat_date = '$date'
+        AND l.day = 1
+    ");
+
+    $result = $query->row();
+
+    return isset($result->total_withdrawal) ? $result : (object) ['total_withdrawal' => 0];
+}
+
 
 
   public function get_previous_loan_with_blanch($from,$to,$blanch_id,$loan_status){
